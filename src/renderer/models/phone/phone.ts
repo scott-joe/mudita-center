@@ -67,8 +67,8 @@ const simulateWriteToPhone = async (time = 2000) => {
 export default {
   state: initialState,
   reducers: {
-    setContacts(state: Phone, contacts: Contact[]): Phone {
-      return contactDatabaseFactory(contacts)
+    setContacts(state: Phone, contacts: Contact[]) {
+      // return contactDatabaseFactory(contacts)
     },
     addContact(state: Phone, contact: Contact): Phone {
       let currentState = state
