@@ -8,6 +8,8 @@ const testText = "essa"
 
 beforeEach(async () => {
   app = await startApp()
+  await app.client.$(`*[data-testid="icon-Close"]`).click()
+  await app.client.$(`*[data-testid="icon-MuditaLogoWithText"]`).click()
 })
 
 afterEach(async () => {

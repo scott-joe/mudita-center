@@ -4,10 +4,12 @@ import { URL_TABS, URL_MAIN } from "Renderer/constants/urls"
 import { TemplatesTestIds } from "Renderer/modules/messages/tabs/templates.enum"
 
 let app: any
-const testText = "essa"
+const testText = "mudita"
 
 beforeEach(async () => {
   app = await startApp()
+  await app.client.$(`*[data-testid="icon-Close"]`).click()
+  await app.client.$(`*[data-testid="icon-MuditaLogoWithText"]`).click()
 })
 
 afterEach(async () => {
