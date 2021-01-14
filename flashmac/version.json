@@ -1,0 +1,25 @@
+{
+  "git": {
+    "git_branch": "master",
+    "git_commit": "888744ee",
+    "git_tag": "0.52.1"
+  },
+  "misc": {
+    "codename": "salvador",
+    "kernel": "V10.2.0",
+    "buildon": "5.8.0-34-generic",
+    "builddate": "2021-01-11-19:44:49",
+    "builduser": "lb"
+  },
+  "version": {
+    "major": "0",
+    "minor": "52",
+    "patch": "1",
+    "string": "0.52.1"
+  },
+  "bootloader": {
+    "included": "1",
+    "version": "",
+    "fiename": "ecoboot.bin"
+  }
+}
