@@ -42,6 +42,38 @@ class UsbDetector {
     device.open()
     const manufacturer = await this.getDescriptor(device, "iManufacturer")
     const serialNumber = await this.getDescriptor(device, "iSerialNumber")
+    const bLength = await this.getDescriptor(device, "bLength")
+    const bDescriptorType = await this.getDescriptor(device, "bDescriptorType")
+    const bcdUSB = await this.getDescriptor(device, "bcdUSB")
+    const bDeviceClass = await this.getDescriptor(device, "bDeviceClass")
+    const bDeviceSubClass = await this.getDescriptor(device, "bDeviceSubClass")
+    const bDeviceProtocol = await this.getDescriptor(device, "bDeviceProtocol")
+    const bMaxPacketSize0 = await this.getDescriptor(device, "bMaxPacketSize0")
+    const idVendor = await this.getDescriptor(device, "idVendor")
+    const idProduct = await this.getDescriptor(device, "idProduct")
+    const bcdDevice = await this.getDescriptor(device, "bcdDevice")
+    const iManufacturer = await this.getDescriptor(device, "iManufacturer")
+    const iProduct = await this.getDescriptor(device, "iProduct")
+    const iSerialNumber = await this.getDescriptor(device, "iSerialNumber")
+    const bNumConfigurations = await this.getDescriptor(device, "bNumConfigurations")
+    console.log("aaa: ", {
+      manufacturer,
+      serialNumber,
+      bLength,
+      bDescriptorType,
+      bcdUSB,
+      bDeviceClass,
+      bDeviceSubClass,
+      bDeviceProtocol,
+      bMaxPacketSize0,
+      idVendor,
+      idProduct,
+      bcdDevice,
+      iManufacturer,
+      iProduct,
+      iSerialNumber,
+      bNumConfigurations
+    })
     device.close()
     return {
       manufacturer,

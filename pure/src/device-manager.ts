@@ -31,6 +31,7 @@ class DeviceManager implements PureDeviceManager {
 
   public async getDevices(): Promise<PureDevice[]> {
     const portList = await DeviceManager.getSerialPortList()
+    console.log("portList: ", portList)
 
     return portList
       .filter(
