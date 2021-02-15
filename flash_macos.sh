@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # set -eo piefail
 
 UPDATE_FILE=""
