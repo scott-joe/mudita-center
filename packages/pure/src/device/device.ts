@@ -6,7 +6,9 @@
 import BaseDevice from "./base-device"
 import {
   CreateDevice,
+  DeviceUpdateRequestPayload,
   Endpoint,
+  FileUploadRequestPayload,
   Method,
   RequestConfig,
   Response,
@@ -20,13 +22,13 @@ import {
 } from "../endpoints"
 import { Formatter } from "../formatter/formatter"
 import { FormatterFactory } from "../formatter/formatter-factory"
+import Logger from "../logger"
 
 class Device extends BaseDevice {
-  #formatter: Formatter
+  #formatter: Formatter = FormatterFactory.create()
 
-  constructor(path: string) {
-    super(path)
-    this.#formatter = FormatterFactory.create()
+  constructor(path: string, logger: Logger) {
+    super(path, logger)
   }
 
   public async connect(): Promise<Response> {
@@ -68,26 +70,17 @@ class Device extends BaseDevice {
     method: Method.Delete
     body: Contact["id"]
   }): Promise<Response<string>>
-  public request(config: {
-    endpoint: Endpoint.DeviceUpdate
-    method: Method.Post
-    filePath: string
-  }): Promise<DeviceUpdateResponse | DeviceUpdateErrorResponse>
-  public request(config: {
-    endpoint: Endpoint.FileUpload
-    method: Method.Post
-    filePath: string
-  }): Promise<Response>
+  public request(
+    config: DeviceUpdateRequestPayload
+  ): Promise<DeviceUpdateResponse | DeviceUpdateErrorResponse>
+  public request(config: FileUploadRequestPayload): Promise<Response>
   public request(config: RequestConfig): Promise<Response<any>>
   public async request(config: RequestConfig): Promise<Response<any>> {
-    try {
-      const formattedConfig = this.#formatter.formatRequestConfig(config)
-      const response = await super.request(formattedConfig)
-      return this.#formatter.formatResponse(config.method, response)
-    } catch (error) {
-      return error
-    }
+    const formattedConfig = this.#formatter.formatRequestConfig(config)
+    const response = await super.request(formattedConfig)
+    return this.#formatter.formatResponse(config.method, response)
   }
 }
 
-export const createDevice: CreateDevice = (path: string) => new Device(path)
+export const createDevice: CreateDevice = (path: string, logger: Logger) =>
+  new Device(path, logger)

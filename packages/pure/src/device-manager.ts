@@ -7,6 +7,7 @@ import { EventEmitter } from "events"
 import SerialPort, { PortInfo } from "serialport"
 import UsbDetector from "./usb-detector"
 import { CreateDevice, PureDevice, createDevice } from "./device"
+import Logger from "./logger"
 
 export const productId = "0622"
 export const vendorId = "045e"
@@ -27,7 +28,8 @@ class DeviceManager implements PureDeviceManager {
 
   constructor(
     private createDevice: CreateDevice,
-    private usbDetector: UsbDetector
+    private usbDetector: UsbDetector,
+    private logger: Logger
   ) {}
 
   public init(): DeviceManager {
@@ -35,8 +37,12 @@ class DeviceManager implements PureDeviceManager {
     return this
   }
 
+  public toggleLogs(enabled: boolean): void {
+    this.logger.toggleLogs(enabled)
+  }
+
   public async getDevices(): Promise<PureDevice[]> {
-    const portList = await DeviceManager.getSerialPortList()
+    const portList = await this.getSerialPortList()
 
     return portList
       .filter(
@@ -44,7 +50,7 @@ class DeviceManager implements PureDeviceManager {
           portInfo.productId?.toLowerCase() === productId &&
           portInfo.vendorId?.toLowerCase() === vendorId
       )
-      .map(({ path }) => this.createDevice(path))
+      .map(({ path }) => this.createDevice(path, this.logger))
   }
 
   public onAttachDevice(
@@ -65,12 +71,15 @@ class DeviceManager implements PureDeviceManager {
 
   private registerAttachDeviceEmitter(): void {
     this.usbDetector.onAttachDevice(async (portInfo) => {
+      this.logger.log("==== usb detector: attached device ====")
+      this.logger.log(JSON.stringify(portInfo, null, 2))
+
       const sleep = () => new Promise((resolve) => setTimeout(resolve, 500))
 
       if (portInfo.vendorId?.toLowerCase() === vendorId) {
         const retryLimit = 20
         for (let i = 0; i < retryLimit; i++) {
-          const portList = await DeviceManager.getSerialPortList()
+          const portList = await this.getSerialPortList()
 
           const port = portList.find(
             ({ productId, vendorId }) =>
@@ -81,7 +90,11 @@ class DeviceManager implements PureDeviceManager {
           )
 
           if (port) {
-            const device = this.createDevice(port.path)
+            const device = this.createDevice(port.path, this.logger)
+            this.logger.log(
+              "==== serial port: attached device is pure device ===="
+            )
+            this.logger.log(JSON.stringify(device, null, 2))
             this.#eventEmitter.emit(
               DeviceManagerEventName.AttachedDevice,
               device
@@ -94,16 +107,24 @@ class DeviceManager implements PureDeviceManager {
     })
   }
 
-  private static getSerialPortList(): Promise<PortInfo[]> {
-    return SerialPort.list()
+  private async getSerialPortList(): Promise<PortInfo[]> {
+    const list = await SerialPort.list()
+    this.logger.log("==== serial port: list ====")
+    this.logger.log(JSON.stringify(list, null, 2))
+    return list
   }
 }
 
 const createDeviceManager = (
   createDevice: CreateDevice,
-  usbDetector: UsbDetector
+  usbDetector: UsbDetector,
+  logger: Logger
 ) => {
-  return new DeviceManager(createDevice, usbDetector).init()
+  return new DeviceManager(createDevice, usbDetector, logger).init()
 }
 
-export default createDeviceManager(createDevice, new UsbDetector().init())
+export default createDeviceManager(
+  createDevice,
+  new UsbDetector().init(),
+  new Logger()
+)
