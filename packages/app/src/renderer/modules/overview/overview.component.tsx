@@ -10,6 +10,7 @@ import {
 } from "Renderer/models/basic-info/basic-info.typings"
 import { DevMode } from "App/dev-mode/store/dev-mode.interface"
 import React, { ReactElement, useEffect } from "react"
+import backupsOs from "Renderer/requests/backup-os.request"
 import OverviewUI from "Renderer/modules/overview/overview-ui.component"
 import { noop } from "Renderer/utils/noop"
 import { useStore } from "react-redux"
@@ -154,9 +155,11 @@ const Overview: FunctionComponent<
     modalService.openModal(<BackupFailedModal />, true)
   }
 
-  const openBackupLoadingModal = () => {
+  const openBackupLoadingModal = async () => {
     backups++
     logger.info("Creating backup...")
+
+    await backupsOs()
 
     simulateProgress(
       <BackupLoadingModal />,

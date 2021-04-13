@@ -13,8 +13,8 @@ import { PureLogger, ConsoleLogger } from "./logger/logger"
 
 const logger: PureLogger = LoggerFactory.getInstance()
 
-export const productId = "0622"
-export const vendorId = "045e"
+export const productId = "0100"
+export const vendorId = "3310"
 export const manufacturer = "Mudita"
 
 enum DeviceManagerEventName {

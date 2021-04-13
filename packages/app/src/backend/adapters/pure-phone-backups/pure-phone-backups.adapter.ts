@@ -3,6 +3,7 @@
  * For licensing, see https://github.com/mudita/mudita-center/blob/master/LICENSE.md
  */
 
+const Mtp = require("webmtp")
 import PurePhoneBackupAdapter from "Backend/adapters/pure-phone-backups/pure-phone-backups-adapter.class"
 import BackupItemInfo from "Common/interfaces/backup-item-info.interface"
 import fs from "fs-extra"
@@ -57,6 +58,36 @@ class PurePhoneBackups extends PurePhoneBackupAdapter {
     return {
       status: DeviceResponseStatus.Ok,
       data: backups,
+    }
+  }
+
+  public async backupsOs(): Promise<DeviceResponse> {
+    console.log("backupsOs: ")
+    const mtp = new Mtp(13072, 256)
+
+    mtp.on("error", (err: any) => console.log("Error", err))
+    mtp.on("ready", async () => {
+      console.log("ready: ")
+      await mtp.openSession()
+      console.log("opened: ")
+
+      const handles = await mtp.getObjectHandles()
+      console.log("handles: ", handles)
+
+      const objectHandle = Math.max(...handles)
+      console.log("objectHandle: ", objectHandle)
+
+      const fileName = await mtp.getFileName(objectHandle)
+      console.log("fileName: ", fileName)
+
+      const array = await mtp.getFile(objectHandle, fileName)
+      fs.writeFileSync(fileName, array)
+
+      await mtp.close()
+    })
+
+    return {
+      status: DeviceResponseStatus.Ok,
     }
   }
 }

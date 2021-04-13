@@ -21,6 +21,12 @@ class PurePhoneBackupsFake extends PurePhoneBackupAdapter {
       ],
     }
   }
+
+  public async backupsOs(): Promise<DeviceResponse> {
+    return {
+      status: DeviceResponseStatus.Ok,
+    }
+  }
 }
 
 const createFakePurePhoneBackupsAdapter = (): PurePhoneBackupAdapter =>

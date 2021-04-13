@@ -269,6 +269,7 @@
     "update-electron-app": "^2.0.1",
     "url-loader": "4.1.1",
     "vcf": "^2.1.0",
+    "webmtp": "^0.0.8",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
     "webpack-dev-middleware": "3.7.2",
