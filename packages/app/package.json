@@ -235,6 +235,7 @@
     "react-intersection-observer": "^8.31.0",
     "react-intl": "^5.0.2",
     "react-intl-translations-manager": "^5.0.3",
+    "react-modal": "^3.12.1",
     "react-redux": "^7.2.2",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
@@ -269,16 +270,15 @@
     "update-electron-app": "^2.0.1",
     "url-loader": "4.1.1",
     "vcf": "^2.1.0",
-    "webmtp": "^0.0.8",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
     "webpack-dev-middleware": "3.7.2",
     "webpack-dev-server": "^3.11.0",
     "webpack-hot-middleware": "2.25.0",
+    "webusb": "^2.2.0",
     "winston": "^3.3.3",
     "winston-daily-rotate-file": "^4.5.0",
-    "winston-transport-rollbar-3": "^3.2.0",
-    "react-modal": "^3.12.1"
+    "winston-transport-rollbar-3": "^3.2.0"
   },
   "dependencies": {
     "serialport": "^9.0.7",

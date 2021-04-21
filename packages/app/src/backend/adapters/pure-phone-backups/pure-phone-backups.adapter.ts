@@ -3,7 +3,7 @@
  * For licensing, see https://github.com/mudita/mudita-center/blob/master/LICENSE.md
  */
 
-const Mtp = require("webmtp")
+import Mtp from "./mtp"
 import PurePhoneBackupAdapter from "Backend/adapters/pure-phone-backups/pure-phone-backups-adapter.class"
 import BackupItemInfo from "Common/interfaces/backup-item-info.interface"
 import fs from "fs-extra"
@@ -65,7 +65,9 @@ class PurePhoneBackups extends PurePhoneBackupAdapter {
     console.log("backupsOs: ")
     const mtp = new Mtp(13072, 256)
 
+    // @ts-ignore
     mtp.on("error", (err: any) => console.log("Error", err))
+    // @ts-ignore
     mtp.on("ready", async () => {
       console.log("ready: ")
       await mtp.openSession()
