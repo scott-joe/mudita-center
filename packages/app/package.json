@@ -72,7 +72,7 @@
       "entitlements": "./entitlements.mac.plist"
     },
     "win": {
-      "publisherName": ["MUDITA SP Z O O"],
+      "publisherName": "DigiCert, Inc.",
       "target": "nsis",
       "icon": "./icons/win/icon.ico"
     },
