@@ -3,7 +3,12 @@
  * For licensing, see https://github.com/mudita/mudita-center/blob/master/LICENSE.md
  */
 
-import React, { createRef, useEffect, RefObject, useState } from "react"
+import React, {
+  createRef,
+  useEffect,
+  RefObject,
+  useState,
+} from "react"
 import { FunctionComponent } from "Renderer/types/function-component.interface"
 import { ModalContent } from "App/collecting-data-modal/collecting-data-modal.styled"
 import ModalDialog from "Renderer/components/core/modal-dialog/modal-dialog.component"
@@ -68,7 +73,7 @@ const PasscodeModalUI: FunctionComponent<PasscodeModalProps> = ({
   inputsNumber,
   ...props
 }) => {
-  const [activeInput, setActiveInput] = useState(0)
+  const [activeInput, setActiveInput] = useState<number>()
   const [passcode, setPasscode] = useState("")
   const inputRefMap: RefObject<HTMLInputElement>[] = []
 
@@ -77,12 +82,12 @@ const PasscodeModalUI: FunctionComponent<PasscodeModalProps> = ({
   }
 
   useEffect(() => {
-    console.log("inputRefMap: ", inputRefMap)
-    console.log("activeInput: ", activeInput)
-    console.log("activeInput: ", inputRefMap[activeInput].current)
-    setTimeout(() => {
+    console.log("render: ", activeInput)
+    if (activeInput !== undefined) {
       inputRefMap[activeInput].current?.focus()
-    })
+    } else {
+      setActiveInput(0)
+    }
   }, [activeInput])
 
   const muditaLogo = (
@@ -154,7 +159,7 @@ const PasscodeModalUI: FunctionComponent<PasscodeModalProps> = ({
         <Title
           displayStyle={TextDisplayStyle.PrimaryHeading}
           message={{
-            id: "component.passcodeModalTitle",
+            id: "module.onboarding.welcomeTitle",
           }}
         />
         <InputContainer>{renderInputs()}</InputContainer>
@@ -162,7 +167,7 @@ const PasscodeModalUI: FunctionComponent<PasscodeModalProps> = ({
           <ButtonComponent
             displayStyle={DisplayStyle.Link3}
             labelMessage={{
-              id: "component.passcodeModalHelp",
+              id: "module.onboarding.welcomeTitle",
             }}
             onClick={openHelpWindow}
           />
