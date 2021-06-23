@@ -19,7 +19,7 @@ import {
   HELP_WINDOW_SIZE,
   WINDOW_SIZE,
 } from "./config"
-import autoupdate from "./autoupdate"
+import autoupdate, { mockAutoupdate } from "./autoupdate"
 import createDownloadListenerRegistrar from "App/main/functions/create-download-listener-registrar"
 import registerPureOsUpdateListener from "App/main/functions/register-pure-os-update-listener"
 import registerPureOsDownloadListener from "App/main/functions/register-pure-os-download-listener"
@@ -55,6 +55,7 @@ import registerAutoLaunchListener from "App/main/functions/register-auto-launch-
 import { Scope } from "Renderer/models/external-providers/google/google.interface"
 import registerContactsExportListener from "App/contacts/backend/export-contacts"
 import registerEventsExportListener from "App/calendar/backend/export-events"
+import registerPureOsDownloadProxy from "App/main/functions/register-pure-os-download-proxy"
 import { OutlookAuthActions } from "Common/enums/outlook-auth-actions.enum"
 import {
   clientId,
@@ -140,6 +141,7 @@ const createWindow = async () => {
   registerAutoLaunchListener()
   registerContactsExportListener()
   registerEventsExportListener()
+  registerPureOsDownloadProxy()
 
   if (productionEnvironment) {
     win.setMenuBarVisibility(false)
@@ -154,6 +156,7 @@ const createWindow = async () => {
   } else {
     process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = "1"
     win.loadURL(`http://localhost:2003`)
+    mockAutoupdate(win)
   }
 
   win.webContents.on("new-window", (event, href) => {

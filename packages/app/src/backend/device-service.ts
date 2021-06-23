@@ -7,7 +7,11 @@ import {
   Contact,
   DeviceEventName,
   DeviceInfo,
+  DownloadFileSystemRequestPayload,
   Endpoint,
+  GetFileSystemRequestPayload,
+  GetMessageResponseBody,
+  GetMessagesBody,
   GetThreadResponseBody,
   GetThreadsBody,
   Method,
@@ -49,14 +53,23 @@ class DeviceService {
     method: Method.Get
   }): Promise<DeviceResponse>
   async request(config: {
+    endpoint: Endpoint.Security
+    method: Method.Put
+    body: { phoneLockCode: string }
+  }): Promise<DeviceResponse>
+  async request(config: {
     endpoint: Endpoint.DeviceInfo
     method: Method.Get
   }): Promise<DeviceResponse<DeviceInfo>>
   async request(config: {
     endpoint: Endpoint.Contacts
     method: Method.Get
-    body: { count: number }
   }): Promise<DeviceResponse<{ entries: Contact[]; totalCount: number }>>
+  public request(config: {
+    endpoint: Endpoint.Messages
+    method: Method.Get
+    body: GetMessagesBody
+  }): Promise<DeviceResponse<GetMessageResponseBody>>
   public request(config: {
     endpoint: Endpoint.Messages
     method: Method.Get
@@ -75,7 +88,9 @@ class DeviceService {
   async request(config: {
     endpoint: Endpoint.Contacts
     method: Method.Delete
-    body: Contact["id"]
+    body: {
+      id: Contact["id"]
+    }
   }): Promise<DeviceResponse<string>>
   async request(config: {
     endpoint: Endpoint.DeviceUpdate
@@ -83,12 +98,31 @@ class DeviceService {
     filePath: string
   }): Promise<DeviceResponse>
   async request(config: {
-    endpoint: Endpoint.FileUpload
+    endpoint: Endpoint.UploadUpdateFileSystem
     method: Method.Post
     filePath: string
   }): Promise<DeviceResponse>
-  async request(config: RequestConfig): Promise<DeviceResponse<any>>
-  async request(config: RequestConfig) {
+  public request(
+    config: GetFileSystemRequestPayload
+  ): Promise<
+    DeviceResponse<{
+      rxID: string
+      fileSize: number
+      chunkSize: number
+    }>
+  >
+  public request(
+    config: DownloadFileSystemRequestPayload
+  ): Promise<
+    DeviceResponse<{
+      rxID: string
+      chunkNo: number
+      data: string
+    }>
+  >
+  async request(
+    config: RequestConfig<any>
+  ): Promise<DeviceResponse<unknown> | DeviceResponse<undefined>> {
     if (!this.device) {
       return {
         status: DeviceResponseStatus.Error,
@@ -103,7 +137,14 @@ class DeviceService {
         .then((response) => DeviceService.mapToDeviceResponse(response))
         .then((response) => {
           this.eventEmitter.emit(eventName, response)
-          this.emitDeviceUnlockedEvent(response)
+          if (
+            !(
+              config.endpoint === Endpoint.Security &&
+              config.method === Method.Put
+            )
+          ) {
+            this.emitDeviceUnlockedEvent(response)
+          }
         })
     }
 
@@ -201,7 +242,7 @@ class DeviceService {
       this.device = device
 
       this.registerDeviceDisconnectedListener()
-      this.registerDeviceLockedListener()
+      this.registerDeviceUnlockedListener()
 
       return {
         status: DeviceResponseStatus.Ok,
@@ -213,7 +254,7 @@ class DeviceService {
     }
   }
 
-  private registerDeviceLockedListener(): void {
+  private registerDeviceUnlockedListener(): void {
     void this.getUnlockedStatusRequest()
     this.lockedInterval = setInterval(
       () => void this.getUnlockedStatusRequest(),
@@ -253,6 +294,10 @@ class DeviceService {
     if (status === ResponseStatus.Ok || status === ResponseStatus.Accepted) {
       return {
         data,
+        status: DeviceResponseStatus.Ok,
+      }
+    } else if (status === ResponseStatus.NoContent) {
+      return {
         status: DeviceResponseStatus.Ok,
       }
     } else if (status === ResponseStatus.PhoneLocked) {

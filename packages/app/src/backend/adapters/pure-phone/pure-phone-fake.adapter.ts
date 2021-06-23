@@ -48,6 +48,24 @@ class PurePhoneFakeAdapter extends PurePhoneAdapter {
     }
   }
 
+  public async unlockDevice(): Promise<DeviceResponse> {
+    return {
+      status: DeviceResponseStatus.Ok,
+    }
+  }
+
+  public async getUnlockDeviceStatus(): Promise<DeviceResponse> {
+    return {
+      status: DeviceResponseStatus.Ok,
+    }
+  }
+
+  public async importDeviceErrorFile(): Promise<DeviceResponse> {
+    return {
+      status: DeviceResponseStatus.Ok,
+    }
+  }
+
   public async updateOs(): Promise<DeviceResponse> {
     return {
       status: DeviceResponseStatus.Ok,

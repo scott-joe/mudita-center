@@ -21,7 +21,8 @@ interface GithubRelease {
   assets: {
     content_type: string
     size: number
-    browser_download_url: string
+    url: string
+    name: string
   }[]
 }
 
@@ -31,6 +32,7 @@ export interface Release {
   prerelease: boolean
   file: {
     url: string
+    name: string
     size: number
   }
   devMode?: boolean
@@ -94,8 +96,9 @@ const registerPureOsUpdateListener = () => {
               date: published_at || created_at,
               prerelease: !isRelease(tag_name),
               file: {
-                url: asset.browser_download_url,
+                url: asset.url,
                 size: asset.size,
+                name: asset.name,
               },
             }
           } else {
