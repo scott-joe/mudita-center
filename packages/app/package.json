@@ -179,8 +179,6 @@
     "@types/vcf": "^2.0.3",
     "@types/webdriverio": "^5.0.0",
     "@types/webpack-env": "^1.16.0",
-    "node-abi": "^2.26.0",
-    "prebuild-install": "5.3.6",
     "asar": "^3.0.3",
     "auto-launch": "^5.0.5",
     "awesome-typescript-loader": "^5.2.1",
