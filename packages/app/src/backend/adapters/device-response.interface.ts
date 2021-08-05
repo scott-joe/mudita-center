@@ -12,6 +12,7 @@ export enum DeviceResponseStatus {
   Ok = "ok",
   PhoneLocked = "phone-locked",
   Error = "error",
+  Duplicated = "phone-number-duplicated",
 }
 
 interface DeviceResponseError<DataType> {

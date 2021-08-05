@@ -309,6 +309,11 @@ class DeviceService {
         error,
         status: DeviceResponseStatus.PhoneLocked,
       }
+    } else if (status === ResponseStatus.Conflict) {
+      return {
+        error,
+        status: DeviceResponseStatus.Duplicated,
+      }
     } else {
       return {
         error,
